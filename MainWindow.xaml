@@ -1,0 +1,69 @@
+﻿<Window x:Class="PithExp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PithExp"
+        mc:Ignorable="d"
+        Title="CatMull-Rom-Spline" Height="600" Width="800" MouseLeftButtonDown="MainWindow_LeftButtonDown" MouseRightButtonDown="MainWindow_LeftButtonDown" MouseLeftButtonUp="Window_MouseLeftButtonUp">
+    <StackPanel x:Name="MainPanel" MouseMove="MainWindow_MouseMove">
+        <Canvas x:Name="MainCanvas" >
+            <!-- Sample image to test the spline -->
+            <Image Width="800" Height="600">
+                <Image.Source>
+                    <BitmapImage DecodePixelWidth="300" UriSource="/images/spline.jpg"/>
+                </Image.Source>
+            </Image>
+            <!-- Spline raw points -->
+            <ItemsControl ItemsSource="{Binding SplinePoints}">
+                <ItemsControl.ItemContainerStyle>
+                    <Style TargetType="FrameworkElement">
+                        <Setter Property="Canvas.Left" Value="{Binding X}" />
+                        <Setter Property="Canvas.Top" Value="{Binding Y}" />
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="Point">
+                        <Ellipse Fill="Black" Width="4" Height="4" Margin="-2,-2,2,2" IsHitTestVisible="False"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas IsItemsHost="True" IsHitTestVisible="False"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+            <!-- Spline control points -->
+            <ItemsControl ItemsSource="{Binding ControlPoints}">
+                <ItemsControl.ItemContainerStyle>
+                    <Style TargetType="ContentPresenter">
+                        <Setter Property="Canvas.Left" Value="{Binding X}" />
+                        <Setter Property="Canvas.Top" Value="{Binding Y}" />
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Ellipse Fill="Blue" Width="10" Height="10" Margin="-5,-5,5,5" IsMouseDirectlyOverChanged="SplinePoints_IsMouseDirectlyOverChanged" MouseLeftButtonDown="SplinePoints_MouseLeftButtonDown"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas IsItemsHost="True"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </Canvas>
+        <!-- Instructions on how to use spline -->
+        <StackPanel>
+            <TextBlock Margin="20,0,20,0">'H': Start first spline or Restart existing spline | 'Ctrl+Z': Undo last spline point | 'Esc': Stop | 'LCtrl+LMouseclick': Add spline point anywhere</TextBlock>
+            <TextBlock Margin="20,0,20,0"> 'LMouseclick' on points: Select and move points for live update | 'Delete': Delete selected control point </TextBlock>
+        </StackPanel>
+        <!-- Spline resolution modifier -->
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Margin="20,0,20,0" FontWeight="Bold">Spline Resolution</TextBlock>
+            <Slider Width="200" Minimum="4" Maximum="30" Value="{Binding SplineRes}"></Slider>
+        </StackPanel>
+        
+    </StackPanel>
+    
+</Window>
